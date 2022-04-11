@@ -1,6 +1,6 @@
 #ifndef BASE_H
 #define BASE_H
-#include "..\inc\vm.h"
+#include "..\vm.h"
 /* Memory/Control instructions handlers */
 void hlt_handler(instr_t in);
 void ldr_handler(instr_t in);
@@ -23,8 +23,8 @@ void je_handler(instr_t in);
 void jne_handler(instr_t in);
 void jle_handler(instr_t in);
 void jge_handler(instr_t in);
-void jle_handler(instr_t in);
-void jge_handler(instr_t in);
+void jleq_handler(instr_t in);
+void jgle_handler(instr_t in);
 /* Input / output */
 void inb_handler(instr_t in);
 void outb_handler(instr_t in);
