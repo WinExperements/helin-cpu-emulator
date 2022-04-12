@@ -13,6 +13,7 @@ typedef struct instr
     int operands;
     int *opers;
     bool hasArgumentsAllocated;
+    int pos;
     void (*handler)(struct instr in);
 } instr_t;
 typedef struct dev {
@@ -41,4 +42,7 @@ void vm_printRegisters();
 void vm_writePort(int,int);
 int vm_readPort(int);
 void vm_addDevice(char *name,void (*write)(int data),int (*read)());
+void vm_deCompile(int n[]);
+instr_t *vm_getInstructionList();
+int vm_getInstructionsCount();
 #endif

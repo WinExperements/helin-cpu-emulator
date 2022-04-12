@@ -4,7 +4,7 @@
 #include "..\inc\instr\base.h"
 #include "..\inc\devices\serial.h"
 #include<string.h>
-instr_t instructions[22];
+static instr_t instructions[23];
 int pc;
 int ret;
 int instrPtr;
@@ -17,7 +17,7 @@ dev_t devs[1];
 int devPtr;
 void vm_init(int memSize) {
     vm.name = "VCPU version 1.0";
-    vm.instructions = 20;
+    vm.instructions = 23;
     int i;
     for (i = 0; i < 10; i++) {
         regs[i] = 0;
@@ -28,11 +28,13 @@ void vm_init(int memSize) {
     serial_init();
 }
 void vm_addInstr(char *name,int operands, void (*handler)(struct instr in)) {
+    int pos = instrPtr++;
     instr_t in;
     in.name = name;
     in.operands = operands;
     in.handler = handler;
-    instructions[instrPtr++] = in;
+    in.pos = pos;
+    instructions[pos] = in;
 }
 vm_t vm_getVM() {
     return vm;
@@ -110,4 +112,29 @@ void vm_addDevice(char *name,void (*write)(int data),int (*read)()) {
     d.write = write;
     d.read = read;
     devs[devPtr++] = d;
+}
+void vm_deCompile(int n[]) {
+    printf("\nDecompilling:\n");
+    int stop = false;
+    int nn = 0;
+    while(!stop) {
+        instr_t in = instructions[n[nn++]];
+        printf("%s ",in.name);
+        if (in.operands != 0) {
+            int i;
+            for (i = 0; i < in.operands; i++) {
+                printf("%d ",n[nn++]);
+            }
+        }
+        printf("\n");
+        if (strcmp("hlt",in.name) == 0) {
+            stop = true;
+        }
+    }
+}
+instr_t *vm_getInstructionList() {
+    return instructions;
+}
+int vm_getInstructionsCount() {
+    return vm.instructions;
 }
